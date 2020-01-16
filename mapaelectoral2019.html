@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>mapa electoral parlamento navarra 2019</title>
+	<meta name="description" content="powered by Leaflet https://leafletjs.com and designed by Mintaka GIS & Cartografia https://mintakagis.wordpress.com/ ">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/> 
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css?family=Hind:300,400,500,600,700" rel="stylesheet" type="text/css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.0.3/leaflet.css">
+	<link rel="stylesheet" href= "https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.css">
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.0.3/leaflet.js"></script>
+	<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+	
+    <script  src="MunRes.js"></script>
+	<script  src="data2019.js"></script>
+	
+	<script>
+	var munSearch = [];
+	 for (var i = 0; i < munResult.features.length; i++) {
+	      short = munResult.features[i].properties
+	      munSearch.push(short.MUNICIPIO2);
+		  }
+	$(function(){
+    var availableTags = munSearch;
+    $("#myText").autocomplete({
+      source: availableTags
+	  });
+	  $( "#ui-id-1" ).click(function(){
+	                    myEngine();
+	                   		          });
+    });
+	
+	</script>
+	
+	<style>
+	 body {
+        margin: 0;
+        padding: 0;
+	}
+	
+    html, body{
+    height: 100%;
+    width: 100vw;
+    }
+	
+	.info {
+			padding: 6px 8px;
+			font: 12px/16px 'Open Sans', sans-serif;
+			/*font-weight: 400;*/
+			background: rgba(255,255,255,0.8);
+			box-shadow: 0 0 15px rgba(0,0,0,0.2);
+			border-radius: 5px;
+			max-width: 140px;
+			pointer-events: none;
+			transform-origin: top right;
+			top: 6px;
+		
+		  }
+		  
+	.search{
+	      font: 12px/16px 'Open Sans', sans-serif;
+	      transform-origin: top left;
+          margin-top: 20px;
+		  z-index: 999;
+              
+              }
+		
+	
+		
+	.muns {
+			padding: 0px 0px;
+			font: 12px/16px 'Open Sans', sans-serif;
+			font-weight: 400;
+			background: rgba(255,255,255,0.2);
+			
+			max-width: 460px;
+			-webkit-column-count: 1; /* Chrome, Safari, Opera */
+            -moz-column-count: 1; /* Firefox */
+            column-count: 1;
+            transform-origin: top right;
+            		
+		}
+		
+	@media only screen and (max-width: 767px) {
+        .info, .legend, .mintaka{
+        transform: scale(0.74, 0.74);
+	       }
+	    .muns {
+	       column-count:1 ;
+		   }
+	    .search {
+	      transform : scale(0.8, 0.8);
+		   } 
+                   
+     }
+		
+	.info h4 {
+			margin: 0 10px 3px;
+			padding: 0px 0px 0px;
+			color: #777;
+			font-weight: 600;
+			font-size: 14px;
+			display: inline;
+			margin-left:0px;
+			clear: left;			
+		}
+		
+	.info h3 {
+			margin: 0 0 3px;
+			padding: 0px 0px 0px;
+			color: #777;
+			font-weight: 600;
+			font-size: 14px;
+			display: inline;
+			clear: right;
+		}
+		
+	.zona {
+	       border-bottom-style: solid;
+	       border-bottom-width:2px ;
+		   border-bottom-color: #070707;
+		   padding-bottom: 2px;
+         }
+		   
+	 h1 {
+	        margin: 0 0 5px;
+			color: #777;
+			font-weight: 600;
+			font-size: 13px;
+			line-height: 1.2;
+			}
+		
+    #myText{
+     height: 28px;
+	 font-size: 14px;
+	 font-family: 'Open Sans';
+	 color: #838181;
+	 width: auto;
+	 border-radius: 3px;
+	 border-style: solid;
+	 border-width: 2px;
+	 border-color: #ededed;
+	 background: rgba(255,255,255,0.8);
+	 }
+
+     button{
+     background-image: url('iconSearch.png');
+	 background-color: rgba(255,255,255,0.1);
+	 background-position: center;
+     background-repeat: no-repeat;
+     background-size: 25px 25px;
+     height:30px;
+	 width:30px;
+	 position: relative;
+     top: 7px;
+	 border-radius: 3px;
+	 cursor: pointer;
+	 border-style: solid;
+	 border-width: 1px;
+	 border-color: rgba(255,255,255,0.1);
+     margin-left: -34px;
+	 }
+	 
+	 #ui-id-1{
+	        z-index:1000;	        
+	 }
+	 
+	 #mapcontainer{
+	   display: block;
+       height: 100%;
+       width: 100vw;
+       margin: 0 auto;
+       padding: 0;
+	   }
+           
+     #mapid{
+        display: block;
+		height: 100%;
+        width: 75%;
+        margin: 0 auto;
+		position: relative;
+           }
+     @media only screen and (max-width: 767px) {
+        #mapid {
+               width:100%;
+		}                 
+	 }
+	 
+	 .legend {
+	          padding: 6px 8px;
+			  font: 12px 'Open Sans' , sans-serif;
+			  font-weight: 400;
+			  background: rgba(255,255,255,0.8);
+			  box-shadow: 0 0 15px rgba(0,0,0,0.2);
+			  border-radius: 5px;
+			  max-width: 150px;
+			  pointer-events: none;
+			  transform-origin: top left;
+			  top: 6px;
+              line-height: 18px;
+              color: #555;
+			  }
+			 
+    .legend i {
+              width: 18px;
+              height: 18px;
+              float: left;
+              margin-right: 8px;
+              opacity: 0.7;
+			  
+              }
+			  
+	.mintaka {
+	          padding: 6px 8px;
+			  font: 12px 'Open Sans', sans-serif;
+			  font-weight: 700;
+			  background: rgba(255,255,255,0.0);
+			  max-width: 150px;
+			  transform-origin: top left;
+			  top: 6px;
+              line-height: 18px;
+              color: white;
+			  }
+			  
+	  .mintaka a, .mintaka a:link, .mintaka a:visited{
+	          text-decoration: none;
+		      color: white;
+		      } 
+	  #ui-id-1{
+	          font-family:'Open Sans';
+			  font-size: 14px;
+			  }
+	 
+	 /*.leaflet-tooltip {
+	 background-color: red;
+	 }*/
+	 
+	</style>
+		
+</head>
+<body>
+    <div id = "mapcontainer">
+	  <div id="mapid">
+	  </div>
+	</div>
+	
+	
+	<script>    		   
+        
+    var CartoDB_PositronNoLabels = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png', {
+	attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+	subdomains: 'abcd',
+	maxZoom: 19
+   });
+			
+	var map = L.map('mapid', {
+	//zoomDelta: 0.5,
+        //zoomSnap: 0.5,
+	minZoom :8,
+	maxZoom : 14,
+	layers: [CartoDB_PositronNoLabels],
+	zoomControl:true,
+	attributionControl: true
+        });
+	
+	map.createPane('labels');
+	map.getPane('labels').style.zIndex = 650;
+	map.getPane('labels').style.pointerEvents = 'none';
+	var positron = L.tileLayer('http://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png', {
+        attribution: '©OpenStreetMap, ©CartoDB'
+    }).addTo(map);
+
+    var positronLabels = L.tileLayer('http://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}.png', {
+        attribution: '©OpenStreetMap, ©CartoDB',
+        pane: 'labels'
+   }).addTo(map);
+   
+	
+    
+    var h = $(document).height();
+    var w = $(document).width();
+    //window.alert("height " + h);
+    //window.alert("width " + w);
+	
+    if (w < 767){
+        map.setView([42.63, -1.60],7.5);
+		zoomLev = map.getZoom();
+	        L.map.maxZoom = 8;
+                //map.dragging.disable();
+                
+		}
+	
+    else{
+	    map.setView([42.63, -1.6],9);
+        //map.dragging.disable();
+		zoomLev = map.getZoom();
+	    //window.alert(zoomLev)
+		}
+		
+    //Add control search
+		
+		var search = L.control({position: 'topleft'});
+
+		search.onAdd = function (map) {
+			this._div = L.DomUtil.create('div', 'search');			
+			
+			this._div.innerHTML = '<div id = "container"><input type="text" autocomplete="on" onclick = "myClear()"  name="Mun" id = "myText" placeholder = "buscar municipio ..." /><button onclick = "myEngine()"></button><br>';
+			
+			return this._div ;
+			
+			};
+		search.addTo(map);
+		
+	//legend control
+		
+	var legend = L.control({position: 'topleft'});
+	
+	legend.onAdd = function (map) {
+
+    var div = L.DomUtil.create('div', 'legend'),
+        parties = ['PSN-PSOE','Podemos','NA+','EH Bildu','Geroa Bai'],
+        labels = [];
+      div.innerHTML = '<h1>Partido más votado<br>por municipio</h>'
+     
+     for (var i = 0; i < parties.length; i++) {
+	        div.innerHTML +=
+            '<i style="background:' + getColor(parties[i]) +'"></i>' +
+            parties[i]+'<br>';
+     } 
+	 
+	 
+      
+     return div;
+     };
+
+     legend.addTo(map);
+	 
+	 //logo control
+	 var mintaka = L.control({position: 'topleft'});
+	 mintaka.onAdd = function (map) {
+     var div = L.DomUtil.create('div', 'mintaka')
+        
+     div.innerHTML = '<a target="_blank" href= "https://mintakagis.wordpress.com/"> por Mintaka GIS&maps</a>'
+
+     
+     return div;
+     };
+
+     mintaka.addTo(map);
+	
+	
+	//style para poligonos
+	
+	function getColor(d) {
+    return d == "Geroa Bai" ? '#2dba2a' :
+           d == "NA+"  ? '#2aa2ba' :
+           d == "PSN-PSOE"  ? '#f91616' :
+           d == "EH Bildu"  ? '#71d85d' :
+           d == "PP"  ? '#85e5e0' :
+           d == "Podemos"  ? '#e77bed' :
+                             '#e5e5e5';
+    }
+	zoomLev = map.getZoom();
+	
+	function getWeight(w){
+	   return w == "selected" ? 5:
+	                            1; 
+	}
+	
+	function getStrokeColor(w){
+	   return w == "selected" ? "grey":
+	                            "white"; 
+	}
+					
+	function getResult(linkValuePols) {	  
+						
+			for (var i = 0; i < result2019.Hoja1.length; i++){
+			         if (result2019.Hoja1[i].Codmun == linkValuePols){
+					    var position = i;
+						
+			             orderA = result2019.Hoja1[position]		
+			
+        	             var arrObject = []		
+			             var objectToArray = function(orderA) { 
+			
+                           for (var key in orderA) {
+                             arrObject.push([key, orderA[key]]);
+                           }
+                           return arrObject;
+			             }
+			
+			             arrObject = objectToArray(orderA);
+						 listResult = arrObject.slice(12,23);
+						 function sortArr() {
+                         listResult.sort(function(a, b){return b[1] - a[1]});
+					     }
+						 sortArr();
+						 
+						 return  listResult[0][1] !== 0 ? listResult[0][0] : ""
+						 						 					 						 
+					    }
+								
+		    }
+            			
+      }
+	  
+		
+	function myStyle(feature){
+	    return {
+        fillColor: getColor(getResult(feature.properties.CMUNICIPIO)),
+        weight: getWeight(feature.properties.selected),
+        opacity: 1,
+        color: getStrokeColor(feature.properties.selected),
+        fillOpacity: 0.5
+		};
+      }
+	  
+	  function myStyleReset(feature){
+	    return {
+        fillColor: getColor(getResult(feature.properties.CMUNICIPIO)),
+        weight: 2,
+        opacity: 1,
+        color: 'white',
+        fillOpacity: 0.5
+		};
+      }
+	  
+		 
+	geojson = L.geoJson(munResult, {style: myStyle,
+	                                onEachFeature: onEachFeature}
+									).addTo(map);
+		
+
+	function highlightFeature(e) {
+	        if (typeof filterLayer !== 'undefined') {
+	            map.removeLayer(filterLayer);
+				}
+			var layer = e.target;
+			linkValue = layer.feature.properties.CMUNICIPIO
+			layer.feature.properties.selected = "selected"
+			
+			for (var i = 0; i < result2019.Hoja1.length; i++){
+			         if (result2019.Hoja1[i].Codmun == linkValue)
+					    var position = i;
+						}
+			orderA = result2019.Hoja1[position]		
+			
+        	var arrObject = []		
+			var objectToArray = function(orderA) { 
+			
+
+            for (var key in orderA) {
+            arrObject.push([key, orderA[key]]);
+            }
+            return arrObject;
+			}
+			
+			arrObject = objectToArray(orderA);
+			
+			listResult = arrObject.slice(12,23);
+			absArray = arrObject.slice(0,23);
+			
+			
+			function sortArr() {
+                      listResult.sort(function(a, b){return b[1] - a[1]});
+					  }
+			
+			sortArr();
+			
+            
+			geojson.setStyle(myStyleReset);
+            
+			layer.setStyle(
+			    {
+			    fillColor: getColor(getResult(layer.feature.properties.CMUNICIPIO)),
+                weight: getWeight(layer.feature.properties.selected),
+                opacity: 1,
+                color: 'grey',
+                fillOpacity: 0.5
+				}
+			    );
+				
+			layer.bringToFront();
+			
+			info.update(result2019.Hoja1[position]);
+
+			map.flyToBounds(layer.feature.properties.bounds,{ 
+			                 animate: true,
+                             duration: 1.5
+							 }
+							 );
+							 
+		    //myClear();
+			
+			//var absten = roundToTwo(absArray[9][1]/absArray[5][1]*100)
+             //window.alert(absten)			
+			
+		}
+
+		function resetHighlight(e) {
+			geojson.resetStyle(e.target);
+			
+			info.update();
+		}
+		function onEachFeature(feature, layer) {
+		    //feature.properties.selected = "deselected";
+			feature.properties.bounds = layer.getBounds();
+			layer.on({
+				click: highlightFeature,
+				mouseover: layer.bindTooltip(feature.properties.MUNICIPIO2,{sticky: true})
+				//mouseout: resetHighlight,
+				//click: zoomToFeature
+			});
+		}
+		
+	//control that shows state info on hover
+		var info = L.control();
+
+		info.onAdd = function (map) {
+			this._div = L.DomUtil.create('div', 'info');
+			this.update();
+			this._div.innerHTML = '<h4 style = "font-weight: 600; font-size: 14px;">Elecciones al Parlamento 2019.<br>Resultado por municipio.</h4><br><p>Para ver los resultados clickar sobre un municipio.</p>' ;
+			return this._div ;
+			
+		};
+		
+		
+		info.update = function (props) {
+		         					
+			    this._div.innerHTML =  props ? '<h1>Municipio</h1>'+
+				'<p class = "zona" style = "font-size: 16px;  font-weight: 600; margin: 0px 0px 0px;">' + props.Municipio + '</p><br><div class = "muns"><h4>'+ 
+				listResult[0][0].replace('_', ' ') + '</h4><h3>'+ listResult[0][1] +'</h3><br><h4>'+
+				listResult[1][0].replace('_', ' ') + '</h4><h3>' +  listResult[1][1] +'</h3><br><h4>'+
+				listResult[2][0].replace('_', ' ') + '</h4><h3>' +  listResult[2][1] +'</h3><br><h4>'+
+				listResult[3][0].replace('_', ' ') + '</h4><h3>' +  listResult[3][1] +'</h3><br><h4>'+
+				listResult[4][0].replace('_', ' ') + '</h4><h3>' +  listResult[4][1] +'</h3><br><h4>'+
+				listResult[5][0].replace('_', ' ') + '</h4><h3>' +  listResult[5][1] +'</h3><br><h4>'+
+				listResult[6][0].replace('_', ' ') + '</h4><h3>' +  listResult[6][1] +'</h3><br><h4>'+
+				listResult[7][0].replace('_', ' ') + '</h4><h3>' +  listResult[7][1] +'</h3><br><h4>'+
+				listResult[8][0].replace('_', ' ') + '</h4><h3>'+  listResult[8][1] +'</h3><br><h4>'+
+				listResult[9][0].replace('_', ' ') + '</h4><h3>' +  listResult[9][1] +'</h3><br><h4>'+
+				listResult[10][0].replace('_', ' ') + '</h4><h3>' +  listResult[10][1] +'</h3><br><h4>'+
+				
+				'Abstención' + '</h4><h3>' + roundToTwo(absArray[9][1]/absArray[5][1]*100)+ ' %'
+				+'</h3></div>'
+				: '<h4 style = "font-weight: 600; font-size: 14px;">Elecciones al Parlamento 2019<br>Resultados por municipio.</h4><br><h3>Para ver los resultados clickar sobre un municipio.</h3>';
+				
+				
+		};
+		
+		        
+		info.addTo(map);
+		
+		
+		// Disable dragging when user's cursor enters the element
+        //info.getContainer().addEventListener('mouseover', function () {
+        //((map.dragging.disable();
+		//});
+		
+		</script>
+		
+			   
+	   <script>  
+	   
+	 var selectedLayer = L.geoJson(munResult, {
+                        filter: function(feature, layer) {
+                                return (feature.properties.selected ==="selected");},
+						//style: selectedStyle
+                        }).addTo(map);
+	  		
+	 
+	function myEngine(){
+     //window.alert(munResult.features.length);	
+	 
+	 var inputMun = document.getElementById("myText").value;
+	 	 
+     for (var i = 0; i < munResult.features.length; i++) {
+            shorted = munResult.features[i].properties
+			shorted.selected = 'deselected'
+	 }
+	 
+	 for (var i = 0; i < munResult.features.length; i++) {
+            shorted = munResult.features[i].properties			
+			
+			if(shorted.MUNICIPIO2 == inputMun) {
+               shorted.selected = "selected";
+		       linkValue = shorted.CMUNICIPIO					  	
+					  
+	           for (var i = 0; i < result2019.Hoja1.length; i++){
+			         if (result2019.Hoja1[i].Codmun == linkValue)
+					    var position = i;
+						}
+					  
+	                  orderObj = result2019.Hoja1[position]	
+    
+			 
+			          //geojson.setStyle(style);
+		
+			 
+			          var arrObject = []		
+			          var objectToArray = function(orderObj) { 
+			
+                         for (var key in orderObj) {
+                            arrObject.push([key, orderObj[key]]);
+                             }
+                          return arrObject;
+							
+			          }
+			
+			          arrObject = objectToArray(orderObj);
+			         //window.alert(arrObject[1][1])
+			          listResult = arrObject.slice(12,23);
+					  absArray = arrObject.slice(0,23);
+			           
+			           function sortArr() {
+                             listResult.sort(function(a, b){return b[1] - a[1]});
+					   }
+			
+			           sortArr();
+			
+			  document.getElementsByClassName("info")[0].innerHTML = '<h1>Municipio</h1>'+
+				'<p class = "zona" style = "font-size: 15px;  font-weight: 600; margin: 0px 2px 0px;">' + inputMun + '</p><br><div class = "muns"><h4>'+ 
+				listResult[0][0].replace('_', ' ') + '</h4><h3>'+ listResult[0][1] +'</h3><br><h4>'+
+				listResult[1][0].replace('_', ' ') + '</h4><h3>' +  listResult[1][1] +'</h3><br><h4>'+
+				listResult[2][0].replace('_', ' ') + '</h4><h3>' +  listResult[2][1] +'</h3><br><h4>'+
+				listResult[3][0].replace('_', ' ') + '</h4><h3>' +  listResult[3][1] +'</h3><br><h4>'+
+				listResult[4][0].replace('_', ' ') + '</h4><h3>' +  listResult[4][1] +'</h3><br><h4>'+
+				listResult[5][0].replace('_', ' ') + '</h4><h3>' +  listResult[5][1] +'</h3><br><h4>'+
+				listResult[6][0].replace('_', ' ') + '</h4><h3>' +  listResult[6][1] +'</h3><br><h4>'+
+				listResult[7][0].replace('_', ' ') + '</h4><h3>' +  listResult[7][1] +'</h3><br><h4>'+
+				listResult[8][0].replace('_', ' ') + '</h4><h3>'+  listResult[8][1] +'</h3><br><h4>'+
+				listResult[9][0].replace('_', ' ') + '</h4><h3>' +  listResult[9][1] +'</h3><br><h4>'+
+				listResult[10][0].replace('_', ' ') + '</h4><h3>' +  listResult[10][1] +'</h3><br><h4>'+
+				
+				'Abstención' + '</h4><h3>' + roundToTwo(absArray[9][1]/absArray[5][1]*100)+ ' %'
+				+'</h3></div>'
+			
+				
+			map.flyToBounds(shorted.bounds,{ 
+			                 animate: true,
+                             duration: 3
+							 }
+							 );
+				
+			 
+	         }
+			 
+	         
+			 
+			 else {
+			      shorted.selected = 'deselected'
+			 }
+			 ///window.alert(shorted.selected)
+			 
+			 
+		}				 
+	     
+		 
+		 
+		 
+		 /*map.removeLayer(geojson);
+		 geojson = L.geoJson(munResult, {style: myStyle,
+	                                onEachFeature: onEachFeature}
+									).addTo(map);*/
+									
+							
+		 filterLayer = L.geoJson(munResult, {filter: myFilter,
+		                                      style: myStyle
+											  }
+											  ).addTo(map);	
+        
+        function myFilter(feature){
+		          return feature.properties.selected == "selected";
+		          }
+       				  
+		
+		
+        geojson.setStyle(myStyle);
+		 
+		 
+	  }
+	 
+	 function myClear(){
+	      document.getElementById("myText").value ='';
+		  map.removeLayer(filterLayer);
+		  /*for (var i = 0; i < munResult.features.length; i++) {
+               shorted = munResult.features[i].properties
+			   shorted.selected = 'deselected'
+	      }*/
+		  
+		  }
+			
+	
+	 
+    </script>
+	
+	<script>
+	
+	function roundToTwo(num) {    
+    return +(Math.round(num + "e+0")  + "e-0");
+    }
+	
+	</script>
+	
+	
+</body>
+</html>
