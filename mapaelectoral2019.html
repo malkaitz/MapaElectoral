@@ -29,21 +29,18 @@
 	  $( "#ui-id-1" ).click(function(){
 	                    myEngine();
 	                   		          });
-    });
-	
+    });	
 	</script>
 	
 	<style>
 	 body {
         margin: 0;
         padding: 0;
-	}
-	
+	}	
     html, body{
     height: 100%;
     width: 100vw;
-    }
-	
+    }	
 	.info {
 			padding: 6px 8px;
 			font: 12px/16px 'Open Sans', sans-serif;
@@ -54,47 +51,38 @@
 			max-width: 140px;
 			pointer-events: none;
 			transform-origin: top right;
-			top: 6px;
-		
-		  }
-		  
+			top: 6px;	
+			min-width: 120px;	
+		  }		  
 	.search{
-	      font: 12px/16px 'Open Sans', sans-serif;
-	      transform-origin: top left;
-          margin-top: 20px;
-		  z-index: 999;
-              
-              }
-		
-	
-		
+	        font: 12px/16px 'Open Sans', sans-serif;
+	        transform-origin: top left;
+            margin-top: 20px;
+		    z-index: 999;              
+            }		
 	.muns {
 			padding: 0px 0px;
 			font: 12px/16px 'Open Sans', sans-serif;
 			font-weight: 400;
 			background: rgba(255,255,255,0.2);
-			
 			max-width: 460px;
 			-webkit-column-count: 1; /* Chrome, Safari, Opera */
             -moz-column-count: 1; /* Firefox */
             column-count: 1;
-            transform-origin: top right;
-            		
-		}
+            transform-origin: top right;            		
+		   }
 		
 	@media only screen and (max-width: 767px) {
-        .info, .legend, .mintaka{
-        transform: scale(0.74, 0.74);
-	       }
-	    .muns {
+           .info, .legend, .mintaka{
+            transform: scale(0.74, 0.74);
+	        }
+	.muns {
 	       column-count:1 ;
 		   }
-	    .search {
-	      transform : scale(0.8, 0.8);
-		   } 
-                   
-     }
-		
+	.search {
+	       transform : scale(0.8, 0.8);
+		   }                    
+     }		
 	.info h4 {
 			margin: 0 10px 3px;
 			padding: 0px 0px 0px;
@@ -104,33 +92,30 @@
 			display: inline;
 			margin-left:0px;
 			clear: left;			
-		}
-		
+		}		
 	.info h3 {
-			margin: 0 0 3px;
+			margin: 0px;
 			padding: 0px 0px 0px;
 			color: #777;
 			font-weight: 600;
 			font-size: 14px;
-			display: inline;
+			
 			clear: right;
-		}
-		
+			float: right;
+		}		
 	.zona {
 	       border-bottom-style: solid;
 	       border-bottom-width:2px ;
 		   border-bottom-color: #070707;
 		   padding-bottom: 2px;
-         }
-		   
+         }		   
 	 h1 {
 	        margin: 0 0 5px;
 			color: #777;
 			font-weight: 600;
 			font-size: 13px;
 			line-height: 1.2;
-			}
-		
+			}		
     #myText{
      height: 28px;
 	 font-size: 14px;
@@ -207,8 +192,7 @@
               height: 18px;
               float: left;
               margin-right: 8px;
-              opacity: 0.7;
-			  
+              opacity: 0.7;			  
               }
 			  
 	.mintaka {
@@ -243,8 +227,7 @@
     <div id = "mapcontainer">
 	  <div id="mapid">
 	  </div>
-	</div>
-	
+	</div>	
 	
 	<script>    		   
         
@@ -275,8 +258,6 @@
         attribution: '©OpenStreetMap, ©CartoDB',
         pane: 'labels'
    }).addTo(map);
-   
-	
     
     var h = $(document).height();
     var w = $(document).width();
@@ -287,8 +268,7 @@
         map.setView([42.63, -1.60],7.5);
 		zoomLev = map.getZoom();
 	        L.map.maxZoom = 8;
-                //map.dragging.disable();
-                
+                //map.dragging.disable();                
 		}
 	
     else{
@@ -304,11 +284,8 @@
 
 		search.onAdd = function (map) {
 			this._div = L.DomUtil.create('div', 'search');			
-			
-			this._div.innerHTML = '<div id = "container"><input type="text" autocomplete="on" onclick = "myClear()"  name="Mun" id = "myText" placeholder = "buscar municipio ..." /><button onclick = "myEngine()"></button><br>';
-			
-			return this._div ;
-			
+			this._div.innerHTML = '<div id = "container"><input type="text" autocomplete="on" onclick = "myClear()"  name="Mun" id = "myText" placeholder = "buscar municipio ..." /><button onclick = "myEngine()"></button><br>';			
+			return this._div ;			
 			};
 		search.addTo(map);
 		
@@ -317,21 +294,16 @@
 	var legend = L.control({position: 'topleft'});
 	
 	legend.onAdd = function (map) {
-
-    var div = L.DomUtil.create('div', 'legend'),
+        var div = L.DomUtil.create('div', 'legend'),
         parties = ['PSN-PSOE','Podemos','NA+','EH Bildu','Geroa Bai'],
         labels = [];
-      div.innerHTML = '<h1>Partido más votado<br>por municipio</h>'
-     
-     for (var i = 0; i < parties.length; i++) {
+        div.innerHTML = '<h1>Partido más votado<br>por municipio</h>'     
+        for (var i = 0; i < parties.length; i++) {
 	        div.innerHTML +=
             '<i style="background:' + getColor(parties[i]) +'"></i>' +
             parties[i]+'<br>';
-     } 
-	 
-	 
-      
-     return div;
+        }        
+        return div;
      };
 
      legend.addTo(map);
@@ -339,16 +311,12 @@
 	 //logo control
 	 var mintaka = L.control({position: 'topleft'});
 	 mintaka.onAdd = function (map) {
-     var div = L.DomUtil.create('div', 'mintaka')
-        
-     div.innerHTML = '<a target="_blank" href= "https://mintakagis.wordpress.com/"> por Mintaka GIS&maps</a>'
-
-     
-     return div;
+       var div = L.DomUtil.create('div', 'mintaka');        
+       div.innerHTML = '<a target="_blank" href= "https://mintakagis.wordpress.com/"> por Mintaka GIS&maps</a>'
+       return div;
      };
 
-     mintaka.addTo(map);
-	
+     mintaka.addTo(map);	
 	
 	//style para poligonos
 	
@@ -545,10 +513,7 @@
 				'Abstención' + '</h4><h3>' + roundToTwo(absArray[9][1]/absArray[5][1]*100)+ ' %'
 				+'</h3></div>'
 				: '<h4 style = "font-weight: 600; font-size: 14px;">Elecciones al Parlamento 2019<br>Resultados por municipio.</h4><br><h3>Para ver los resultados clickar sobre un municipio.</h3>';
-				
-				
-		};
-		
+		};		
 		        
 		info.addTo(map);
 		
@@ -592,11 +557,9 @@
 					    var position = i;
 						}
 					  
-	                  orderObj = result2019.Hoja1[position]	
-    
+	                  orderObj = result2019.Hoja1[position]	   
 			 
-			          //geojson.setStyle(style);
-		
+			          //geojson.setStyle(style);		
 			 
 			          var arrObject = []		
 			          var objectToArray = function(orderObj) { 
@@ -634,37 +597,25 @@
 				listResult[10][0].replace('_', ' ') + '</h4><h3>' +  listResult[10][1] +'</h3><br><h4>'+
 				
 				'Abstención' + '</h4><h3>' + roundToTwo(absArray[9][1]/absArray[5][1]*100)+ ' %'
-				+'</h3></div>'
-			
+				+'</h3></div>'			
 				
 			map.flyToBounds(shorted.bounds,{ 
 			                 animate: true,
                              duration: 3
 							 }
-							 );
-				
-			 
-	         }
-			 
-	         
+							 );		 
+	         }       
 			 
 			 else {
 			      shorted.selected = 'deselected'
 			 }
-			 ///window.alert(shorted.selected)
-			 
-			 
-		}				 
-	     
-		 
-		 
-		 
+			 ///window.alert(shorted.selected)		 
+		}	 
 		 /*map.removeLayer(geojson);
 		 geojson = L.geoJson(munResult, {style: myStyle,
 	                                onEachFeature: onEachFeature}
 									).addTo(map);*/
-									
-							
+															
 		 filterLayer = L.geoJson(munResult, {filter: myFilter,
 		                                      style: myStyle
 											  }
@@ -672,37 +623,26 @@
         
         function myFilter(feature){
 		          return feature.properties.selected == "selected";
-		          }
-       				  
+		          }	
 		
-		
-        geojson.setStyle(myStyle);
-		 
-		 
-	  }
+        geojson.setStyle(myStyle);		 
+	}
 	 
-	 function myClear(){
+	function myClear(){
 	      document.getElementById("myText").value ='';
 		  map.removeLayer(filterLayer);
 		  /*for (var i = 0; i < munResult.features.length; i++) {
                shorted = munResult.features[i].properties
 			   shorted.selected = 'deselected'
-	      }*/
-		  
-		  }
-			
-	
+	      }*/		  
+	}
 	 
     </script>
 	
-	<script>
-	
+	<script>	
 	function roundToTwo(num) {    
     return +(Math.round(num + "e+0")  + "e-0");
-    }
-	
+    }	
 	</script>
-	
-	
 </body>
 </html>
